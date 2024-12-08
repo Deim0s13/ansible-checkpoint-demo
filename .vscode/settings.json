@@ -1,5 +1,5 @@
 {
     "yaml.schemas": {
-        "https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/ansible.json#/$defs/playbook": "file:///Users/pleathen/Projects/ansible-checkpoint-demo/kubernetes/manifests/job-run-ansible.yaml"
+        "https://json.schemastore.org/yamllint.json": "file:///Users/pleathen/Projects/ansible-checkpoint-demo/kubernetes/manifests/job-run-ansible.yaml"
     }
 }

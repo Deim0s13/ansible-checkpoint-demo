@@ -6,21 +6,14 @@ spec:
   template:
     spec:
       containers:
-      - name: ansible
-        image: williamyeh/ansible:alpine3
-        command: ["/bin/sh", "-c"]
-        args:
-          - ansible-playbook /playbooks/update_firewall.yml --vault-password-file /vault/.vault_pass
+      - name: ansible-runner
+        image: pleathen/ansible-checkpoint:latest
+        command: ["ansible-playbook", "/app/ansible/playbooks/update_firewall.yml"]
         volumeMounts:
-        - name: playbooks
-          mountPath: /playbooks
-        - name: vault-pass
-          mountPath: /vault
+          - name: vault-pass
+            mountPath: /vault
       volumes:
-      - name: playbooks
-        configMap:
-          name: ansible-playbooks
       - name: vault-pass
         secret:
           secretName: ansible-vault-pass
-      restartPolicy: OnFailure
+      restartPolicy: Never

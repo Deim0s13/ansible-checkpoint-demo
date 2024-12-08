@@ -5,17 +5,17 @@ metadata:
   namespace: argocd
 spec:
   project: default
-
   source:
     repoURL: 'https://github.com/Deim0s13/checkpoint-gitops-demo.git'
     targetRevision: main
     path: 'kubernetes/manifests'
-
   destination:
     server: https://kubernetes.default.svc'
     namespace: default
-
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
+    - PruneLast=true
