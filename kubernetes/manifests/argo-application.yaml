@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: checkpoint-firewall-app
+  namespace: argocd
+spec:
+  project: default
+
+  source:
+    repoURL: 'https://github.com/Deim0s13/checkpoint-gitops-demo.git'
+    targetRevision: main
+    path: 'kubernetes/manifests'
+
+  destination:
+    server: https://kubernetes.default.svc'
+    namespace: default
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

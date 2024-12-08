@@ -1,0 +1,19 @@
+---
+- name: Update Check Point Firewall Policy
+  hosts: localhost
+  connection: local
+  gather_facts: no
+  vars_file:
+    - vars/main.yml
+  tasks:
+    - name: Add Firewall Rule
+    check_point.mgmt.cp.mgmt_access_rule:
+      name: "Allow HTTP"
+      layer: "Network"
+      position: "top"
+      source: "Any"
+      destination: "Any"
+      service: "http"
+      action: "Accept"
+      auto_publish_session: true
+    register: result≈

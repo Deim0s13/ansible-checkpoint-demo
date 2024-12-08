@@ -1,0 +1,11 @@
+# Ignore Ansible vault files
+vars/*.vault
+
+# Ignore Python cache
+__pycache__/
+
+#Ignore virtual environments
+venv/
+
+#Ignore sensitive data
+*.pem
