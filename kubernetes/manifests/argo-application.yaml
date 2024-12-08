@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: 'https://github.com/Deim0s13/checkpoint-gitops-demo.git'
+    repoURL: 'https://github.com/Deim0s13/ansible-checkpoint-demo.git'
     targetRevision: main
     path: 'kubernetes/manifests'
   destination:
