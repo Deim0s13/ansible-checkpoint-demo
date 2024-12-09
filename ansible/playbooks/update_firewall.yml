@@ -15,8 +15,11 @@
         service: "http"
         action: "Accept"
         auto_publish_session: true
+        server: "{{ mgmt_server }}"
+        username: "{{ mgmt_username }}"
+        password: "{{ mgmt_password }}"
       register: result
 
-    - name: Debug output
+    - name: Debug Output
       debug:
         var: result
