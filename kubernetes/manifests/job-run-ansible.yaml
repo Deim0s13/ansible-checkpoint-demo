@@ -5,6 +5,8 @@ metadata:
 spec:
   template:
     spec:
+      imagePullSecrets:
+      - name: quay-regcred
       containers:
       - name: ansible-runner
         image: quay.io/rh-ee-pleathen/ansible-checkpoint:latest
