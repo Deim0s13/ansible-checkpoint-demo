@@ -1,9 +1,7 @@
 - name: Update Check Point Firewall
-  hosts: localhost
-  connection: local
+  hosts: checkpoint
+  connection: httpapi
   gather_facts: no
-  vars_files:
-    - ../vars/main.yml
   tasks:
     - name: Add Firewall Rule
       check_point.mgmt.cp_mgmt_access_rule:
@@ -15,9 +13,6 @@
         service: "http"
         action: "Accept"
         auto_publish_session: true
-        server: "{{ mgmt_server }}"
-        username: "{{ mgmt_username }}"
-        password: "{{ mgmt_password }}"
       register: result
 
     - name: Debug Output
