@@ -7,7 +7,7 @@ spec:
     spec:
       containers:
       - name: ansible-runner
-        image: pleathen/ansible-checkpoint:latest
+        image: quay.io/rh-ee-pleathen/ansible-checkpoint:latest
         command: ["ansible-playbook", "/app/ansible/playbooks/update_firewall.yml"]
         volumeMounts:
           - name: vault-pass
