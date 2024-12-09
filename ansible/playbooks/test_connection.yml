@@ -1,0 +1,13 @@
+---
+- name: Test Check Point API Connection
+  hosts: checkpoint
+  gather_facts: no
+  tasks:
+    - name: Get API versions
+      check_point.mgmt.cp_mgmt_show_api_versions:
+        auto_publish_session: yes
+      register: api_versions
+
+    - name: Print API versions
+      debug:
+        var: api_versions
