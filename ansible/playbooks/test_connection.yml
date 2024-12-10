@@ -1,9 +1,13 @@
 - name: Test Check Point API Connection
   hosts: checkpoint
+  connection: httpapi
+  gather_facts: no
   tasks:
-    - name: Retrieve API versions
+    - name: Show API versions
       check_point.mgmt.cp_mgmt_show_api_versions:
-        server: "{{ ansible_host }}"
-        username: "{{ ansible_user }}"
-        password: "{{ ansible_ssh_pass }}"
-        validate_certs: no
+        auto_publish_session: true
+      register: api_versions
+
+    - name: Debug output
+      debug:
+        var: api_versions

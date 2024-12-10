@@ -1,32 +1,20 @@
 - name: Update Check Point Firewall
-  hosts: checkpoint
+  hosts: check_point
   connection: httpapi
   gather_facts: no
-
   tasks:
-    - name: Login to Check Point API
-      check_point.mgmt.login:
-        user: "admin"
-        password: "R!ckandM0rty"
-      register: login_result
-
     - name: Add Firewall Rule
       check_point.mgmt.cp_mgmt_access_rule:
         name: "Allow HTTP"
         layer: "Network"
         position: "top"
-        source: "Any"
-        destination: "Any"
-        service: "http"
+        source: ["Any"]
+        destination: ["Any"]
+        service: ["http"]
         action: "Accept"
         auto_publish_session: true
-        session_data: "{{ login_result.session_data }}"
       register: result
 
     - name: Debug Output
       debug:
         var: result
-
-    - name: Logout from Check Point API
-      check_point.mgmt.logout:
-        session_data: "{{ login_result.session_data }}"
