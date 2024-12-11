@@ -1,0 +1,15 @@
+2024-12-11 15:21:35,997 p=2333 u=pleathen n=ansible INFO| [DEPRECATION WARNING]: [defaults]collections_paths option. Reason: does not fit var naming standard, use the singular form collections_path instead 
+Alternatives: none. This feature will be removed in version 2.19. Deprecation warnings can be disabled by setting deprecation_warnings=False in 
+ansible.cfg.
+2024-12-11 15:21:36,112 p=2333 u=pleathen n=ansible ERROR| ERROR! the playbook: ansible/playbooks/update_firewall.yml could not be found
+2024-12-11 15:22:32,349 p=2559 u=pleathen n=ansible INFO| [DEPRECATION WARNING]: [defaults]collections_paths option. Reason: does not fit var naming standard, use the singular form collections_path instead 
+Alternatives: none. This feature will be removed in version 2.19. Deprecation warnings can be disabled by setting deprecation_warnings=False in 
+ansible.cfg.
+2024-12-11 15:22:32,475 p=2559 u=pleathen n=ansible WARNING| [WARNING]: Error getting vault password file (default): The vault password file /Users/pleathen/Projects/ansible-checkpoint-demo/ansible/.vault_pass
+was not found
+
+2024-12-11 15:22:32,475 p=2559 u=pleathen n=ansible ERROR| ERROR! The vault password file /Users/pleathen/Projects/ansible-checkpoint-demo/ansible/.vault_pass was not found
+2024-12-11 15:23:07,386 p=2683 u=pleathen n=ansible INFO| [DEPRECATION WARNING]: [defaults]collections_paths option. Reason: does not fit var naming standard, use the singular form collections_path instead 
+Alternatives: none. This feature will be removed in version 2.19. Deprecation warnings can be disabled by setting deprecation_warnings=False in 
+ansible.cfg.
+2024-12-11 15:23:07,481 p=2683 u=pleathen n=ansible ERROR| ERROR! the playbook: ansible/playbooks/update_firewall.yml could not be found
