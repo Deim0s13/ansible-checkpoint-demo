@@ -1,5 +1,5 @@
 - name: Update Check Point Firewall
-  hosts: check_point
+  hosts: checkpoint
   connection: httpapi
   gather_facts: no
   tasks:
@@ -18,3 +18,9 @@
     - name: Debug Output
       debug:
         var: result
+
+    - name: Install the policy
+      check_point.mgmt.cp_mgmt_install_policy:
+        policy_package: "Standard"
+        targets: ["cp-gateway"]
+        wait_for_task: true
