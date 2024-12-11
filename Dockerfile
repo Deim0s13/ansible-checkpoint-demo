@@ -24,6 +24,7 @@ WORKDIR /app
 
 # Copy Ansible playbooks and configuratios into the container
 COPY ansible/ /app/ansible/
+COPY ansible/inventory/ /app/ansible/inventory/
 
 # Default command to run the container
-ENTRYPOINT ["ansible-playbook", "/app/ansible/playbooks/update_firewall.yml"]
+ENTRYPOINT ["ansible-playbook", "-i", "/app/ansible/inventory/hosts.ini", "/app/ansible/playbooks/update_firewall.yml"]

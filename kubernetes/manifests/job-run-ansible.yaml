@@ -10,7 +10,7 @@ spec:
       containers:
       - name: ansible-runner
         image: quay.io/rh-ee-pleathen/ansible-checkpoint:latest
-        command: ["ansible-playbook", "/app/ansible/playbooks/update_firewall.yml", "--vault-password-file", "/vault/.vault_pass"]
+        command: ["ansible-playbook", "-i", "/app/ansible/inventory/hosts.ini", "/app/ansible/playbooks/update_firewall.yml", "--vault-password-file", "/vault/.vault_pass"]
         volumeMounts:
           - name: vault-pass
             mountPath: /vault
