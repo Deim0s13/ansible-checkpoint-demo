@@ -16,6 +16,9 @@
 
 set -euo pipefail
 
+# Disable AWS CLI pager so output never opens in less/vim
+export AWS_PAGER=""
+
 REGION="ap-southeast-2"
 BACKEND_FILE="terraform/backend.tf"
 
