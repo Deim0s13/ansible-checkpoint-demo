@@ -56,7 +56,54 @@ Access to all instances is via **AWS Systems Manager Session Manager** — no ba
 
 Each Check Point gateway has **three Elastic Network Interfaces**: external (`fw-external-subnet`), internal (`fw-internal-subnet`), and a dedicated management ENI (`mgmt-subnet`). Keeping management traffic on a separate interface ensures SIC between the SMS and gateways never needs to traverse the firewall itself — cleaner architecturally and simpler to automate.
 
-### 2.3 Component Summary
+### 2.3 Architecture Diagram
+
+```mermaid
+graph TB
+    ADMIN["Admin — macOS"]
+
+    subgraph VPC ["AWS VPC — 10.0.0.0/16"]
+        subgraph PUBLIC ["public-subnet — 10.0.0.0/24"]
+            IGW["Internet Gateway"] --- NAT["NAT Gateway"]
+        end
+
+        subgraph MGMT ["mgmt-subnet — 10.0.1.0/24"]
+            AAP["Ansible Automation Platform\nRHEL 9 / m5.xlarge"]
+            SMS["Check Point SMS\nGaia R81.20 / m5.xlarge"]
+            GW1_MGMT(["GW1 mgmt ENI"])
+            GW2_MGMT(["GW2 mgmt ENI"])
+        end
+
+        subgraph ACCESS ["access-subnet — 10.0.2.0/24"]
+            WIN["Windows Jump Server\nSmartConsole / t3.medium"]
+        end
+
+        subgraph FWEXT ["fw-external-subnet — 10.0.3.0/24"]
+            GW1["Check Point GW1\nGaia R81.20 / c5.xlarge"]
+            GW2["Check Point GW2\nGaia R81.20 / c5.xlarge"]
+        end
+
+        subgraph FWINT ["fw-internal-subnet — 10.0.4.0/24"]
+            WEB["Web Server\nnginx / t3.micro"]
+            APP["App Server\nFlask / t3.micro"]
+        end
+    end
+
+    ADMIN -->|"SSM Session Manager"| AAP
+    ADMIN -->|"RDP over SSM"| WIN
+    WIN -->|"SmartConsole :19009"| SMS
+    AAP -->|"Management API :443"| SMS
+    SMS -.->|"SIC"| GW1_MGMT
+    SMS -.->|"SIC"| GW2_MGMT
+    GW1_MGMT --- GW1
+    GW2_MGMT --- GW2
+    GW1 -->|"policy enforced"| WEB
+    GW2 -->|"policy enforced"| WEB
+    WEB -->|":8080"| APP
+    GW1 & GW2 -->|"outbound NAT"| NAT
+```
+
+### 2.4 Component Summary
 
 | Component | Technology | EC2 Size | OS |
 |-----------|------------|----------|----|
