@@ -10,6 +10,12 @@ override.tf.json
 *_override.tf
 *_override.tf.json
 
+# Terraform variable files — high risk for accidental secret exposure
+terraform.tfvars
+terraform.tfvars.json
+*.auto.tfvars
+*.auto.tfvars.json
+
 # Ansible
 *.retry
 ansible/playbooks/*.log
@@ -19,11 +25,14 @@ ansible/playbooks/*.log
 .vault_password
 vault_pass.txt
 
-# AWS credentials / environment
+# AWS credentials and environment files — use ~/.aws/credentials instead
 .env
+.envrc
 *.pem
 *.key
 aws_credentials
+credentials
+*_credentials
 
 # macOS
 .DS_Store
@@ -40,3 +49,6 @@ aws_credentials
 # Check Point OVA images — too large for Git
 *.ova
 *.iso
+
+# detect-secrets — baseline is committed, but never the audit log
+.secrets.audit

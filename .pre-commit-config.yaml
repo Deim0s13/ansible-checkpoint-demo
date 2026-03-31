@@ -1,0 +1,50 @@
+# =============================================================================
+# Pre-commit hooks
+#
+# Scans every commit for accidentally included secrets, credentials, or keys
+# before they leave your machine.
+#
+# Setup (one-time, run from the repo root):
+#   brew install pre-commit
+#   pip install detect-secrets
+#   detect-secrets scan > .secrets.baseline
+#   pre-commit install
+#
+# After setup, hooks run automatically on every `git commit`.
+# To run manually against all files: pre-commit run --all-files
+# =============================================================================
+
+repos:
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.5.0
+    hooks:
+      - id: detect-secrets
+        name: Scan for secrets
+        args:
+          - --baseline
+          - .secrets.baseline
+        exclude: |
+          (?x)^(
+            .secrets.baseline|
+            .*\.lock$|
+            .*\.tfstate$|
+            .*\.tfstate\.backup$
+          )$
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: check-added-large-files
+        name: Block large files
+        args: [--maxkb=500]
+      - id: check-merge-conflict
+        name: Check for merge conflict markers
+      - id: detect-aws-credentials
+        name: Scan for AWS credentials
+        args: [--allow-missing-credentials]
+      - id: detect-private-key
+        name: Scan for private keys
+      - id: end-of-file-fixer
+        name: Fix missing end-of-file newline
+      - id: trailing-whitespace
+        name: Trim trailing whitespace
