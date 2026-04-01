@@ -10,7 +10,7 @@ resource "aws_security_group" "mgmt" {
   description = "Management tier: AAP, SMS, and gateway management ENIs"
   vpc_id      = aws_vpc.main.id
 
-  # SSM Session Manager — HTTPS to VPC endpoints (or 0.0.0.0/0 for internet-routed SSM)
+  # SSM Session Manager - HTTPS to VPC endpoints (or 0.0.0.0/0 for internet-routed SSM)
   egress {
     description = "HTTPS outbound (SSM, package downloads, AAP installer)"
     from_port   = 443
@@ -27,7 +27,7 @@ resource "aws_security_group" "mgmt" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  # Check Point Management API — AAP → SMS
+  # Check Point Management API - AAP → SMS
   ingress {
     description = "Check Point Management API from AAP"
     from_port   = 443
@@ -36,7 +36,7 @@ resource "aws_security_group" "mgmt" {
     cidr_blocks = ["${var.aap_private_ip}/32"]
   }
 
-  # SmartConsole — Windows jump server → SMS
+  # SmartConsole - Windows jump server → SMS
   ingress {
     description = "SmartConsole from Windows jump server"
     from_port   = 19009
@@ -45,7 +45,7 @@ resource "aws_security_group" "mgmt" {
     cidr_blocks = [var.access_subnet_cidr]
   }
 
-  # Check Point SIC — SMS ↔ gateway management ENIs
+  # Check Point SIC - SMS ↔ gateway management ENIs
   ingress {
     description = "SIC between SMS and gateways"
     from_port   = 18191
@@ -62,7 +62,7 @@ resource "aws_security_group" "mgmt" {
     cidr_blocks = [var.mgmt_subnet_cidr]
   }
 
-  # CPD daemon — used during SIC and policy installation
+  # CPD daemon - used during SIC and policy installation
   ingress {
     description = "CPD daemon from mgmt subnet"
     from_port   = 18192
@@ -79,7 +79,7 @@ resource "aws_security_group" "mgmt" {
     cidr_blocks = [var.mgmt_subnet_cidr]
   }
 
-  # ICMP — for connectivity testing within mgmt subnet
+  # ICMP - for connectivity testing within mgmt subnet
   ingress {
     description = "ICMP within mgmt subnet"
     from_port   = -1
@@ -109,7 +109,7 @@ resource "aws_security_group" "access" {
   description = "Access tier: Windows SmartConsole jump server"
   vpc_id      = aws_vpc.main.id
 
-  # RDP is NOT opened here — access is via SSM port-forwarding tunnel only.
+  # RDP is NOT opened here - access is via SSM port-forwarding tunnel only.
   # Egress to SMS for SmartConsole
   egress {
     description = "SmartConsole to SMS"
@@ -145,14 +145,14 @@ resource "aws_security_group" "access" {
 
 resource "aws_security_group" "fw_external" {
   name        = "${var.environment}-fw-external-sg"
-  description = "Firewall external interfaces — simulated untrusted traffic"
+  description = "Firewall external interfaces - simulated untrusted traffic"
   vpc_id      = aws_vpc.main.id
 
-  # Allow all inbound on the external interface — the Check Point policy
+  # Allow all inbound on the external interface - the Check Point policy
   # controls what actually passes through. This SG is intentionally permissive
   # because the firewall itself is the enforcement point.
   ingress {
-    description = "All traffic — enforced by Check Point policy"
+    description = "All traffic - enforced by Check Point policy"
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
@@ -177,7 +177,7 @@ resource "aws_security_group" "fw_external" {
 
 resource "aws_security_group" "fw_internal" {
   name        = "${var.environment}-fw-internal-sg"
-  description = "Firewall internal interfaces — traffic to/from protected subnet"
+  description = "Firewall internal interfaces - traffic to/from protected subnet"
   vpc_id      = aws_vpc.main.id
 
   ingress {
@@ -206,7 +206,7 @@ resource "aws_security_group" "fw_internal" {
 
 resource "aws_security_group" "web" {
   name        = "${var.environment}-web-sg"
-  description = "Demo web server — nginx"
+  description = "Demo web server - nginx"
   vpc_id      = aws_vpc.main.id
 
   # HTTP from gateway internal interfaces only
@@ -262,7 +262,7 @@ resource "aws_security_group" "web" {
 
 resource "aws_security_group" "app" {
   name        = "${var.environment}-app-sg"
-  description = "Demo app server — Flask"
+  description = "Demo app server - Flask"
   vpc_id      = aws_vpc.main.id
 
   # Port 8080 from web server only
