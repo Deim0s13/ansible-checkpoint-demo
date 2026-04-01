@@ -79,10 +79,12 @@ resource "aws_instance" "aap" {
 
 # =============================================================================
 # CHECK POINT SECURITY MANAGEMENT SERVER (SMS)
+# Skipped until var.gaia_ami_id is set (run scripts/import-gaia-ami.sh first)
 # =============================================================================
 
 resource "aws_instance" "sms" {
-  ami                  = data.aws_ssm_parameter.gaia_ami.value
+  count                = var.gaia_ami_id != "" ? 1 : 0
+  ami                  = var.gaia_ami_id
   instance_type        = var.sms_instance_type
   subnet_id            = aws_subnet.mgmt.id
   private_ip           = var.sms_private_ip
@@ -99,6 +101,7 @@ resource "aws_instance" "sms" {
   }
 
   # Gaia first-time configuration via clish
+  # Full bootstrap handled by ansible/playbooks/02-bootstrap-checkpoint.yml
   # Full bootstrap (Management API enablement, admin password) is handled
   # by ansible/playbooks/02-bootstrap-checkpoint.yml
   user_data = base64encode(<<-EOF
@@ -136,9 +139,11 @@ resource "aws_instance" "sms" {
 # CHECK POINT GATEWAY 1
 # Three ENIs: mgmt (eth0), external (eth1), internal (eth2)
 # Source/dest check disabled on data plane interfaces
+# All skipped until var.gaia_ami_id is set
 # =============================================================================
 
 resource "aws_network_interface" "gw1_mgmt" {
+  count             = var.gaia_ami_id != "" ? 1 : 0
   subnet_id         = aws_subnet.mgmt.id
   private_ips       = [var.gw1_mgmt_ip]
   security_groups   = [aws_security_group.mgmt.id]
@@ -150,10 +155,11 @@ resource "aws_network_interface" "gw1_mgmt" {
 }
 
 resource "aws_network_interface" "gw1_external" {
+  count             = var.gaia_ami_id != "" ? 1 : 0
   subnet_id         = aws_subnet.fw_external.id
   private_ips       = [var.gw1_external_ip]
   security_groups   = [aws_security_group.fw_external.id]
-  source_dest_check = false # data plane — must be disabled for traffic forwarding
+  source_dest_check = false
 
   tags = {
     Name = "${var.environment}-gw1-external-eni"
@@ -161,10 +167,11 @@ resource "aws_network_interface" "gw1_external" {
 }
 
 resource "aws_network_interface" "gw1_internal" {
+  count             = var.gaia_ami_id != "" ? 1 : 0
   subnet_id         = aws_subnet.fw_internal.id
   private_ips       = [var.gw1_internal_ip]
   security_groups   = [aws_security_group.fw_internal.id]
-  source_dest_check = false # data plane — must be disabled for traffic forwarding
+  source_dest_check = false
 
   tags = {
     Name = "${var.environment}-gw1-internal-eni"
@@ -172,26 +179,24 @@ resource "aws_network_interface" "gw1_internal" {
 }
 
 resource "aws_instance" "gw1" {
-  ami                  = data.aws_ssm_parameter.gaia_ami.value
+  count                = var.gaia_ami_id != "" ? 1 : 0
+  ami                  = var.gaia_ami_id
   instance_type        = var.gateway_instance_type
   iam_instance_profile = aws_iam_instance_profile.ec2_ssm.name
   key_name             = aws_key_pair.demo.key_name
 
-  # eth0 — management (primary, used for SIC and policy push from SMS)
   network_interface {
-    network_interface_id = aws_network_interface.gw1_mgmt.id
+    network_interface_id = aws_network_interface.gw1_mgmt[0].id
     device_index         = 0
   }
 
-  # eth1 — external (untrusted)
   network_interface {
-    network_interface_id = aws_network_interface.gw1_external.id
+    network_interface_id = aws_network_interface.gw1_external[0].id
     device_index         = 1
   }
 
-  # eth2 — internal (trusted)
   network_interface {
-    network_interface_id = aws_network_interface.gw1_internal.id
+    network_interface_id = aws_network_interface.gw1_internal[0].id
     device_index         = 2
   }
 
@@ -239,6 +244,7 @@ resource "aws_instance" "gw1" {
 # =============================================================================
 
 resource "aws_network_interface" "gw2_mgmt" {
+  count             = var.gaia_ami_id != "" ? 1 : 0
   subnet_id         = aws_subnet.mgmt.id
   private_ips       = [var.gw2_mgmt_ip]
   security_groups   = [aws_security_group.mgmt.id]
@@ -250,6 +256,7 @@ resource "aws_network_interface" "gw2_mgmt" {
 }
 
 resource "aws_network_interface" "gw2_external" {
+  count             = var.gaia_ami_id != "" ? 1 : 0
   subnet_id         = aws_subnet.fw_external.id
   private_ips       = [var.gw2_external_ip]
   security_groups   = [aws_security_group.fw_external.id]
@@ -261,6 +268,7 @@ resource "aws_network_interface" "gw2_external" {
 }
 
 resource "aws_network_interface" "gw2_internal" {
+  count             = var.gaia_ami_id != "" ? 1 : 0
   subnet_id         = aws_subnet.fw_internal.id
   private_ips       = [var.gw2_internal_ip]
   security_groups   = [aws_security_group.fw_internal.id]
@@ -272,23 +280,24 @@ resource "aws_network_interface" "gw2_internal" {
 }
 
 resource "aws_instance" "gw2" {
-  ami                  = data.aws_ssm_parameter.gaia_ami.value
+  count                = var.gaia_ami_id != "" ? 1 : 0
+  ami                  = var.gaia_ami_id
   instance_type        = var.gateway_instance_type
   iam_instance_profile = aws_iam_instance_profile.ec2_ssm.name
   key_name             = aws_key_pair.demo.key_name
 
   network_interface {
-    network_interface_id = aws_network_interface.gw2_mgmt.id
+    network_interface_id = aws_network_interface.gw2_mgmt[0].id
     device_index         = 0
   }
 
   network_interface {
-    network_interface_id = aws_network_interface.gw2_external.id
+    network_interface_id = aws_network_interface.gw2_external[0].id
     device_index         = 1
   }
 
   network_interface {
-    network_interface_id = aws_network_interface.gw2_internal.id
+    network_interface_id = aws_network_interface.gw2_internal[0].id
     device_index         = 2
   }
 

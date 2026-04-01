@@ -79,10 +79,10 @@ data "aws_ami" "windows_2022" {
   }
 }
 
-# Gaia AMI — imported via scripts/import-gaia-ami.sh and stored in SSM
-data "aws_ssm_parameter" "gaia_ami" {
-  name = var.gaia_ami_ssm_parameter
-}
+# Gaia AMI ID — set by scripts/import-gaia-ami.sh
+# Pass via TF_VAR_gaia_ami_id env var or terraform.tfvars (gitignored)
+# terraform plan succeeds with the default empty value; apply will skip
+# Check Point instances until a real AMI ID is provided.
 
 # ── VPC ───────────────────────────────────────────────────────────────────────
 

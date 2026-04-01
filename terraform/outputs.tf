@@ -58,8 +58,23 @@ output "app_server_ip" {
 }
 
 output "gaia_ami_id" {
-  description = "Gaia AMI ID resolved from SSM (populated by import-gaia-ami.sh)"
-  value       = data.aws_ssm_parameter.gaia_ami.value
+  description = "Gaia AMI ID in use (empty until import-gaia-ami.sh has been run)"
+  value       = var.gaia_ami_id
+}
+
+output "sms_instance_id" {
+  description = "Check Point SMS EC2 instance ID (empty until gaia_ami_id is set)"
+  value       = length(aws_instance.sms) > 0 ? aws_instance.sms[0].id : ""
+}
+
+output "gw1_instance_id" {
+  description = "Check Point GW1 EC2 instance ID (empty until gaia_ami_id is set)"
+  value       = length(aws_instance.gw1) > 0 ? aws_instance.gw1[0].id : ""
+}
+
+output "gw2_instance_id" {
+  description = "Check Point GW2 EC2 instance ID (empty until gaia_ami_id is set)"
+  value       = length(aws_instance.gw2) > 0 ? aws_instance.gw2[0].id : ""
 }
 
 output "rhel9_ami_id" {
